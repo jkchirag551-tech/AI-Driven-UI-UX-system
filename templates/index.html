@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Design System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <h1>🤖 AI Design System</h1>
+        <p>Select an industry to generate a UI/UX profile.</p>
+
+        <div class="input-group">
+            <select id="industryInput">
+                <option value="Food">Food</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Corporate">Corporate</option>
+                <option value="Travel">Travel</option>
+                <option value="E-commerce">E-commerce</option>
+                <option value="Education">Education</option>
+                <option value="Portfolio">Portfolio</option>
+                <option value="Blog">Blog</option>
+            </select>
+            <button onclick="getPrediction()">Generate Design</button>
+        </div>
+
+        <div id="results" class="hidden">
+            <div class="card">
+                <h3>📐 Layout</h3>
+                <p id="res-layout">Loading...</p>
+            </div>
+            <div class="card">
+                <h3>Aa Typography</h3>
+                <p id="res-font">Loading...</p>
+            </div>
+            
+            <h3>🎨 Color Palette</h3>
+            <div class="palette-container">
+                <div class="color-box" id="box-pri">Primary</div>
+                <div class="color-box" id="box-sec">Secondary</div>
+                <div class="color-box" id="box-ter">Tertiary</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // THE JAVASCRIPT WAITER
+        async function getPrediction() {
+            let cat = document.getElementById("industryInput").value;
+
+            // 1. Talk to Python
+            let response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ category: cat })
+            });
+
+            let data = await response.json();
+
+            // 2. Update HTML
+            document.getElementById("results").classList.remove("hidden");
+            
+            document.getElementById("res-layout").innerText = data.layout;
+            document.getElementById("res-font").innerText = data.font;
+
+            // Update Colors
+            updateColor("box-pri", data.primary);
+            updateColor("box-sec", data.secondary);
+            updateColor("box-ter", data.tertiary);
+        }
+
+        function updateColor(id, colorString) {
+            let hex = colorString.split('(')[0].trim();
+            let el = document.getElementById(id);
+            el.style.backgroundColor = hex;
+            el.innerText = hex;
+        }
+    </script>
+</body>
+</html>
