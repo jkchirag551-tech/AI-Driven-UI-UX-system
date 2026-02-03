@@ -11,4 +11,5 @@ start http://127.0.0.1:5000
 python app1.py
 
 :: This keeps the window open if there is an error
+
 pause
