@@ -24,3 +24,4 @@ This project is an AI-powered decision support system designed to assist UI/UX d
 1. Install dependencies:
    ```bash
    pip install -r requirements.txt
+   Windows Users: simply double-click Run_Project.bat to start the application automatically.
